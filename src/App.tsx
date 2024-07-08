@@ -27,6 +27,12 @@ function App() {
 		});
 	};
 
+	const onClickDelete = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+		setCountries(prevCountries => {
+			return prevCountries.filter(country => country.id !== id);
+		});
+	};
+
 	return (
 		<main>
 			<h2>내가 가고싶은 나라들</h2>
@@ -47,10 +53,10 @@ function App() {
 				{want.map(country => (
 					<li key={country.id}>
 						<span>{country.countryName}</span>
-						<button name={"visited"} onClick={e => onClickBtn(e, country.id)}>
+						<button name={Categories.Visited} onClick={e => onClickBtn(e, country.id)}>
 							✅
 						</button>
-						<button>🗑️</button>
+						<button onClick={e => onClickBtn(e, country.id)}>🗑️</button>
 					</li>
 				))}
 			</ul>
@@ -59,14 +65,15 @@ function App() {
 				{visited.map(country => (
 					<li key={country.id}>
 						<span>{country.countryName}</span>
-						<button name={"fav"} onClick={e => onClickBtn(e, country.id)}>
+						<button name={Categories.Fav} onClick={e => onClickBtn(e, country.id)}>
 							✅
 						</button>
-						<button>🗑️</button>
+						<button name={Categories.Want} onClick={e => onClickBtn(e, country.id)}>
+							🗑️
+						</button>
 					</li>
 				))}
 			</ul>
-
 			<h2>내가 좋아하는 나라들</h2>
 			<ul>
 				{fav.map(country => (
@@ -75,7 +82,9 @@ function App() {
 						<button name={"fav"} onClick={e => onClickBtn(e, country.id)}>
 							✅
 						</button>
-						<button>🗑️</button>
+						<button name={Categories.Visited} onClick={e => onClickBtn(e, country.id)}>
+							🗑️
+						</button>
 					</li>
 				))}
 			</ul>
