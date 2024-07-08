@@ -2,11 +2,10 @@ import { atom, selector } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 export enum Categories {
-	"Want" = "Want",
-	"Visited" = "Visited",
-	"Fav" = "Fav",
+	"Want" = "want",
+	"Visited" = "visited",
+	"Fav" = "fav",
 }
-
 export interface ICountry {
 	id: number;
 	countryName: string;
@@ -18,7 +17,7 @@ export interface ICountryInput {
 }
 
 export const categoryState = atom<Categories>({
-	key: "cateogry",
+	key: "category",
 	default: Categories.Want,
 });
 

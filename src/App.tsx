@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { ICountryInput, ICountry, Categories } from "./atoms";
+import { ICountryInput, ICountry, Categories, countrySelector, countryState } from "./atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 function App() {
+	const [want, visited, fav] = useRecoilValue(countrySelector);
+
 	const { register, handleSubmit, reset } = useForm<ICountryInput>();
-	const [countries, setCountries] = useState<ICountry[]>([]);
+	const setCountries = useSetRecoilState(countryState);
 
 	const onValid = ({ country }: ICountryInput) => {
-		console.log(country);
 		setCountries(prev => [...prev, { id: Date.now(), countryName: country, category: Categories.Want }]);
 		reset();
 	};
@@ -19,7 +21,8 @@ function App() {
 
 		setCountries((prevCountries: ICountry[]) => {
 			const targetIndex = prevCountries.findIndex(country => country.id === id);
-			const newCountry: ICountry = { id: id, category: name as any, countryName: prevCountries[targetIndex].countryName };
+			const newCountry: ICountry = { id: id, countryName: prevCountries[targetIndex].countryName, category: name as any };
+
 			return [...prevCountries.slice(0, targetIndex), newCountry, ...prevCountries.slice(targetIndex + 1)];
 		});
 	};
@@ -40,23 +43,42 @@ function App() {
 				/>
 				<button>Let's Go!</button>
 			</form>
-			{countries &&
-				countries.map(country => (
+			<ul>
+				{want.map(country => (
 					<li key={country.id}>
 						<span>{country.countryName}</span>
-						{country.category === "want" && (
-							<>
-								<button name={"visited"} onClick={e => onClickBtn(e, country.id)}>
-									✅
-								</button>
-								<button>🗑️</button>
-							</>
-						)}
+						<button name={"visited"} onClick={e => onClickBtn(e, country.id)}>
+							✅
+						</button>
+						<button>🗑️</button>
 					</li>
 				))}
+			</ul>
 			<h2>내가 가 본 나라들</h2>
+			<ul>
+				{visited.map(country => (
+					<li key={country.id}>
+						<span>{country.countryName}</span>
+						<button name={"fav"} onClick={e => onClickBtn(e, country.id)}>
+							✅
+						</button>
+						<button>🗑️</button>
+					</li>
+				))}
+			</ul>
 
 			<h2>내가 좋아하는 나라들</h2>
+			<ul>
+				{fav.map(country => (
+					<li key={country.id}>
+						<span>{country.countryName}</span>
+						<button name={"fav"} onClick={e => onClickBtn(e, country.id)}>
+							✅
+						</button>
+						<button>🗑️</button>
+					</li>
+				))}
+			</ul>
 		</main>
 	);
 }
