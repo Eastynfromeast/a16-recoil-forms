@@ -6,7 +6,12 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 function App() {
 	const [want, visited, fav] = useRecoilValue(countrySelector);
 
-	const { register, handleSubmit, reset } = useForm<ICountryInput>();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm<ICountryInput>();
 	const setCountries = useSetRecoilState(countryState);
 
 	const onValid = ({ country }: ICountryInput) => {
@@ -39,14 +44,15 @@ function App() {
 			<form onSubmit={handleSubmit(onValid)}>
 				<input
 					{...register("country", {
-						required: "나라 이름이 입력되어야 합니다.",
+						required: "가고 싶은 나라의 이름을 한글 혹은 영문으로 적어 주세요:)",
 						pattern: {
 							value: /^[ㄱ-ㅎ가-힣a-zA-z\s]*$/,
-							message: "한글과 영문 알파벳맛 입력 가능합니다.",
+							message: "한글과 영문 알파벳맛 입력 가능합니다. 다시 시도해 주세요.",
 						},
 					})}
 					placeholder="가고 싶은 나라의 이름을 적어 보세요."
 				/>
+				{errors?.country && <p>{errors.country.message}</p>}
 				<button>Let's Go!</button>
 			</form>
 			<ul>
@@ -56,7 +62,7 @@ function App() {
 						<button name={Categories.Visited} onClick={e => onClickBtn(e, country.id)}>
 							✅
 						</button>
-						<button onClick={e => onClickBtn(e, country.id)}>🗑️</button>
+						<button onClick={e => onClickDelete(e, country.id)}>🗑️</button>
 					</li>
 				))}
 			</ul>
@@ -66,10 +72,10 @@ function App() {
 					<li key={country.id}>
 						<span>{country.countryName}</span>
 						<button name={Categories.Fav} onClick={e => onClickBtn(e, country.id)}>
-							✅
+							🫶
 						</button>
 						<button name={Categories.Want} onClick={e => onClickBtn(e, country.id)}>
-							🗑️
+							❌
 						</button>
 					</li>
 				))}
@@ -79,11 +85,8 @@ function App() {
 				{fav.map(country => (
 					<li key={country.id}>
 						<span>{country.countryName}</span>
-						<button name={"fav"} onClick={e => onClickBtn(e, country.id)}>
-							✅
-						</button>
 						<button name={Categories.Visited} onClick={e => onClickBtn(e, country.id)}>
-							🗑️
+							👎
 						</button>
 					</li>
 				))}
