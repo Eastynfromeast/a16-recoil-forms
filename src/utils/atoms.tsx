@@ -1,20 +1,6 @@
 import { atom, selector } from "recoil";
 import { recoilPersist } from "recoil-persist";
-
-export enum Categories {
-	"Want" = "want",
-	"Visited" = "visited",
-	"Fav" = "fav",
-}
-export interface ICountry {
-	id: number;
-	countryName: string;
-	category: Categories;
-}
-
-export interface ICountryInput {
-	country: string;
-}
+import { Categories, ICountry } from "./types";
 
 export const categoryState = atom<Categories>({
 	key: "category",
